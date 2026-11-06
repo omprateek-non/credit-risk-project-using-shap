@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Credit Risk Assessment</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=Sora:wght@500;700;800&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+<div class="bg" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header class="top">
+  <h1>Will this loan<br>get paid back?</h1>
+  <p>Fill in the application. The model returns a default probability and compares it with the approval cutoff.</p>
+  <span id="status" class="pill"><b></b><em>Checking server…</em></span>
+</header>
+
+<main class="layout">
+  <form id="form" class="panel glow" novalidate>
+    <fieldset>
+      <legend>Applicant</legend>
+      <div class="grid">
+        <label class="f"><span>Age</span><input name="person_age" type="number" min="18" max="99" value="30" required></label>
+        <label class="f"><span>Annual income</span><input name="person_income" type="number" min="1" step="any" value="60000" required></label>
+        <label class="f"><span>Home ownership</span>
+          <select name="person_home_ownership"><option>RENT</option><option>OWN</option><option>MORTGAGE</option><option>OTHER</option></select></label>
+        <label class="f"><span>Years employed</span><input name="person_emp_length" type="number" min="0" step="any" value="4" required></label>
+        <label class="f"><span>Credit history (years)</span><input name="cb_person_cred_hist_length" type="number" min="0" step="any" value="5" required></label>
+        <div class="f"><span>Previous default on file</span>
+          <div class="seg" role="radiogroup">
+            <input type="radio" id="d-n" name="cb_person_default_on_file" value="N" checked><label for="d-n">No</label>
+            <input type="radio" id="d-y" name="cb_person_default_on_file" value="Y"><label for="d-y">Yes</label>
+            <u></u>
+          </div></div>
+      </div>
+    </fieldset>
+
+    <fieldset>
+      <legend>Loan</legend>
+      <div class="grid">
+        <label class="f"><span>Purpose</span>
+          <select name="loan_intent"><option value="PERSONAL">Personal</option><option value="EDUCATION">Education</option><option value="MEDICAL">Medical</option><option value="VENTURE">Venture</option><option value="HOMEIMPROVEMENT">Home improvement</option><option value="DEBTCONSOLIDATION">Debt consolidation</option></select></label>
+        <label class="f"><span>Interest rate (%)</span><input name="loan_int_rate" type="number" min="0.01" max="100" step="any" value="11.5" required></label>
+        <label class="f wide"><span>Loan amount <output id="amntOut">10,000</output></span>
+          <input name="loan_amnt" id="amnt" type="range" min="500" max="100000" step="500" value="10000"></label>
+        <div class="f wide"><span>Loan grade</span>
+          <div class="grades" id="grades"></div></div>
+      </div>
+      <div class="ratio"><span>Loan as share of income</span><strong id="ratio">16.7%</strong><div class="meter"><i id="ratioBar"></i></div><small id="ratioNote"></small></div>
+    </fieldset>
+
+    <button id="go" type="submit"><span class="lbl">Assess risk</span><span class="spin"></span></button>
+    <p id="err" class="err" role="alert" hidden></p>
+  </form>
+
+  <aside class="panel result" id="result">
+    <svg viewBox="0 0 300 175" class="dial" aria-hidden="true">
+      <defs><linearGradient id="g" x1="0" x2="1"><stop offset="0" stop-color="#3ddc97"/><stop offset=".5" stop-color="#ffc857"/><stop offset="1" stop-color="#ff5d6c"/></linearGradient></defs>
+      <path d="M30 150 A120 120 0 0 1 270 150" class="track"/>
+      <path d="M30 150 A120 120 0 0 1 270 150" class="arc" id="arc" pathLength="100"/>
+      <g id="thr" style="transform-origin:150px 150px"><line x1="150" y1="22" x2="150" y2="42"/></g>
+      <g id="needle" style="transform-origin:150px 150px"><path d="M146 150 L150 36 L154 150Z"/></g>
+      <circle cx="150" cy="150" r="9" class="hub"/>
+    </svg>
+    <div class="num"><span id="pct">--</span><small>%</small></div>
+    <p class="cap">chance of default</p>
+    <div id="verdict" class="verdict idle">Waiting for an application</div>
+    <dl class="facts">
+      <div><dt>Approval cutoff</dt><dd id="thrOut">--</dd></div>
+      <div><dt>Repay probability</dt><dd id="okOut">--</dd></div>
+      <div><dt>Margin to cutoff</dt><dd id="gapOut">--</dd></div>
+    </dl>
+    <p class="model" id="modelName">Model output appears here.</p>
+  </aside>
+</main>
+<script src="/static/script.js"></script>
+</body>
+</html>
